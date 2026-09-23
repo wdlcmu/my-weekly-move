@@ -184,6 +184,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
     <p class="body-copy">Of the five areas, this is the one you marked lowest. <b>Small moves here matter most.</b> The mirror only points. It never judges.</p>
     <p class="pausch-line">Inspired by Randy Pausch&rsquo;s question: are you spending your time on the right things?</p>
     <button class="cta" id="btn-to-move">Choose my one move</button>
+<button class="backlink" id="r-back">&larr; Back</button>
   </section>
 
   <!-- MOVE -->
@@ -210,6 +211,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
 
   <!-- PROMPT -->
   <section class="screen" id="s-prompt">
+<button class="backlink" id="p-back">&larr; Back</button>
     <p class="kicker" style="margin-top:26px">Your check-in prompt</p>
     <h2 class="q-title">Take this to your AI.</h2>
     <p class="q-hint">Which one do you use? The packet tunes its follow-up line for it.</p>
@@ -791,9 +793,19 @@ $("btn-ics").onclick = function(){
     "DTSTAMP:" + icsDate(new Date()),
     "DTSTART:" + icsDate(d),
     "DTEND:" + icsDate(end),
+  "RRULE:FREQ=WEEKLY",
     "SUMMARY:" + icsEsc("My Weekly Move: did I make my move?"),
     "DESCRIPTION:" + icsEsc("This week's move: " + state.move + " (protecting " + state.focus + "). Answer honestly: I made it, or not yet."),
-    "END:VEVENT", "END:VCALENDAR"].join("\r\n") + "\r\n";
+    "BEGIN:VALARM",
+  "TRIGGER:-PT15M",
+  "ACTION:DISPLAY",
+  "DESCRIPTION:" + icsEsc("My Weekly Move: did I make my move?"),
+  "END:VALARM",
+  "END:VEVENT", "END:VCALENDAR"].join("\r\n") + "\r\n";
+  if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+    $("ics-status").textContent = "iPhone can't download calendar files from the web. Add it manually: every Friday 9:00 AM, weekly, titled 'My Weekly Move: did I make my move?'";
+    return;
+  }
   var blob = new Blob([ics], {type: "text/calendar"});
   var a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
@@ -861,6 +873,11 @@ $("btn-img").onclick = function(){
     return;
   }
   function saved(blob){
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+      openImageTab(card);
+      $("share-status").textContent = "Touch and hold the image, then tap Save to Photos.";
+      return;
+    }
     if (window.URL && URL.createObjectURL) {
       var a = document.createElement("a");
       a.href = URL.createObjectURL(blob); a.download = "my-weekly-move.png";
