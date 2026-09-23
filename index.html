@@ -228,7 +228,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
     <div class="prompt-card" id="prompt-text"></div>
     <details class="standing" id="standing-box">
       <summary>Standing context (optional)</summary>
-      <p class="q-hint">Goals, commitments, what works for you. Saved in this browser only. The packet carries it every week, word for word, so your AI always knows it.</p>
+      <p class="q-hint">Goals, commitments, what works for you. Saved in this browser only. It keeps your goals and commitments in front of you each week.</p>
       <label for="st-goals">Long-term goals</label>
       <input id="st-goals" maxlength="300" placeholder="Example: run a 10K in November, get out of debt"/>
       <label for="st-commit">Recurring commitments</label>
@@ -495,21 +495,7 @@ function pushTrend(line){
   try { localStorage.setItem(LS_TRENDS, JSON.stringify(t)); } catch(e){}
 }
 
-function buildPrompt(){ var today = new Date(); var dateStr = state.checkDay.toLocaleDateString("en-US", {month: "short", day: "numeric"}); var trends = getTrends(); var pastWeeks = trends.length ? trends.map(function(t){ return "- " + t; }).join("
-") : "(none yet — this is week 1)"; return "MY WEEKLY MOVE — CHECK-IN FOR " + fmtDate(today) + "
-" + "Paste this into any AI chatbot.
-" + "
-" + "You're my weekly accountability partner. Keep replies short, one question at a time.
-" + "
-" + "MY MOVE: " + state.move + "
-" + "Help me make it easy — ask what's in my way, what I'd need, whatever it takes.
-" + "
-" + "ON FRIDAY (" + dateStr + ")
-" + "Ask me one question: did I make my move? Then help me sharpen next week's move.
-" + "When I tell you the result, say in plain words whether it was kept or missed — I'll log it on the site.
-" + "
-" + "PAST WEEKS
-" + pastWeeks; } function saveState(){
+function buildPrompt(){ var NL = String.fromCharCode(10); var today = new Date(); var dateStr = state.checkDay.toLocaleDateString("en-US", {month: "short", day: "numeric"}); var trends = getTrends(); var pastWeeks = trends.length ? trends.map(function(t){ return "- " + t; }).join(NL) : "(none yet — this is week 1)"; return "MY WEEKLY MOVE — CHECK-IN FOR " + fmtDate(today) + NL + "Paste this into any AI chatbot." + NL + NL + "You're my weekly accountability partner. Keep replies short, one question at a time." + NL + NL + "MY MOVE: " + state.move + NL + "Help me make it easy — ask what's in my way, what I'd need, whatever it takes." + NL + NL + "ON FRIDAY (" + dateStr + ")" + NL + "Ask me one question: did I make my move? Then help me sharpen next week's move." + NL + "When I tell you the result, say in plain words whether it was kept or missed — I'll log it on the site." + NL + NL + "PAST WEEKS" + NL + pastWeeks; } function saveState(){
   try {
     localStorage.setItem(LS_KEY, JSON.stringify({
       focus: state.focus, move: state.move,
