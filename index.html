@@ -648,8 +648,11 @@ $("q-opts").addEventListener("click", function(){
 $("btn-to-move").onclick = function(){ state.move = ""; renderMoves(); show("s-move"); };
 $("m-back").onclick = function(){ show("s-reveal"); };
 $("move-custom").addEventListener("input", function(e){
-  var v = e.target.value.trim();
-  if (v) { state.move = v; renderMoves(); }
+  var v = e.target.value;
+  if (!v.trim()) return;
+  state.move = v;
+  var btns = document.querySelectorAll("#move-opts .opt");
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove("sel");
 });
 $("btn-to-day").onclick = function(){
   var custom = $("move-custom").value.trim();
