@@ -214,21 +214,15 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
 <button class="backlink" id="p-back">&larr; Back</button>
     <p class="kicker" style="margin-top:26px">Your check-in prompt</p>
     <h2 class="q-title">Take this to your AI.</h2>
-    <p class="q-hint">Which one do you use? The packet tunes its follow-up line for it.</p>
-    <div class="assist-pills" id="assist-pills">
-      <button class="a-pill" data-a="ChatGPT">ChatGPT</button>
-      <button class="a-pill" data-a="Claude">Claude</button>
-      <button class="a-pill" data-a="Gemini">Gemini</button>
-    </div>
-    <button class="cta" id="btn-copy">Copy my check-in prompt</button>
+        <button class="cta" id="btn-copy">Copy my check-in prompt</button>
     <p class="fine" id="copy-status" style="min-height:18px"></p>
     <div class="why-send">
       <p class="why-send-title">Why send this?</p>
       <ul>
         <li><b>It gives your AI a job.</b> Accountability partner, not advice machine. One question at a time, no lectures.</li>
-        <li><b>It carries your week.</b> Your ratings, your move, and your check-in day in a single paste.</li>
+        <li><b>It carries your week.</b> Your move, your check-in day, and your track record in a single paste.</li>
         <li><b>It sets the check-in contract.</b> On your day it asks one question: did you make your move?</li>
-        <li><b>It prepares next week.</b> Your AI hands back an update block you paste in next time, so the loop compounds.</li>
+        <li><b>It prepares next week.</b> You answer kept or missed right here on the site, and your next packet carries the trend.</li>
       </ul>
     </div>
     <div class="prompt-card" id="prompt-text"></div>
@@ -241,12 +235,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
       <input id="st-commit" maxlength="300" placeholder="Example: kids' bedtime is 8, team standup Mondays"/>
       <label for="st-works">What has worked before</label>
       <input id="st-works" maxlength="300" placeholder="Example: morning workouts stick, evening ones don't"/>
-      <label for="paste-block">Paste your AI's update block</label>
-      <p class="q-hint" style="margin:4px 0 6px;">Your AI hands you an update block after each check-in. Paste it here, code fence and all, and it fills in the boxes above plus your trend log.</p>
-      <textarea id="paste-block" placeholder="Paste the block your AI gave you"></textarea>
-      <button class="cta secondary" id="btn-paste" style="margin-top:10px">Apply update block</button>
-      <p class="fine" id="paste-status" style="min-height:18px"></p>
-    </details>
+          </details>
     <button class="cta secondary" id="btn-ics" style="margin-top:12px">Add a calendar reminder (backup)</button>
     <p class="fine" id="ics-status" style="min-height:18px"></p>
     <ol class="steps">
@@ -303,7 +292,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
     </details>
     <details>
       <summary>Which AI assistant works with this?</summary>
-      <p><b>Any of the big ones: ChatGPT, Claude, or Gemini.</b> The prompt is plain text, so there is nothing to install and nothing to connect. On the prompt screen you pick the one you use, and the packet tunes its follow-up line for it. If your assistant offers scheduled reminders, the packet tells you how to set one up. If not, there is a calendar backup on the same screen.</p>
+      <p><b>Any chatbot works.</b> The packet is plain text, so there is nothing to install and nothing to connect. It is the same packet no matter what you paste it into. If you want a nudge on your check-in day, there is a calendar reminder button on the prompt screen.</p>
     </details>
     <details>
       <summary>Do I need an account? What do you store?</summary>
@@ -489,7 +478,6 @@ function defaultDay(){
 /* ---- prompt ---- */
 var LS_STANDING = "mwm_standing_v1";
 var LS_TRENDS = "mwm_trends_v1";
-var LS_ASSIST = "mwm_assist_v1";
 
 function getStanding(){
   try { return JSON.parse(localStorage.getItem(LS_STANDING) || "{}"); } catch(e){ return {}; }
@@ -505,12 +493,6 @@ function pushTrend(line){
   t.push(line);
   while (t.length > 8) t.shift();
   try { localStorage.setItem(LS_TRENDS, JSON.stringify(t)); } catch(e){}
-}
-function getAssist(){
-  try { return localStorage.getItem(LS_ASSIST) || "ChatGPT"; } catch(e){ return "ChatGPT"; }
-}
-function setAssist(a){
-  try { localStorage.setItem(LS_ASSIST, a); } catch(e){}
 }
 
 function buildPrompt(){ var today = new Date(); var dateStr = state.checkDay.toLocaleDateString("en-US", {month: "short", day: "numeric"}); var trends = getTrends(); var pastWeeks = trends.length ? trends.map(function(t){ return "- " + t; }).join("
@@ -614,8 +596,7 @@ $("btn-to-day").onclick = function(){
 $("d-back").onclick = function(){ renderMoves(); show("s-move"); };
 $("p-back").onclick = function(){ renderDays(); show("s-day"); };
 $("btn-to-prompt").onclick = function(){
-  renderAssist();
-  prefillStanding();
+    prefillStanding();
   $("prompt-text").textContent = buildPrompt();
   $("done-day").textContent = dayName(state.checkDay);
   $("done-day2").textContent = dayName(state.checkDay);
@@ -646,14 +627,7 @@ $("btn-copy").onclick = function(){
   }
 };
 
-/* prompt screen: assistant picker, standing context, calendar backup */
-function renderAssist(){
-  var cur = getAssist();
-  var pills = document.querySelectorAll("#assist-pills .a-pill");
-  for (var i = 0; i < pills.length; i++) {
-    pills[i].classList.toggle("sel", pills[i].getAttribute("data-a") === cur);
-  }
-}
+/* prompt screen: standing context, calendar backup */
 function prefillStanding(){
   var st = getStanding();
   if ($("st-goals")) $("st-goals").value = st.goals || "";
@@ -670,55 +644,9 @@ function readStanding(){
 function refreshPrompt(){
   if (state.checkDay) $("prompt-text").textContent = buildPrompt();
 }
-document.querySelectorAll("#assist-pills .a-pill").forEach(function(p){
-  p.onclick = function(){
-    setAssist(p.getAttribute("data-a"));
-    renderAssist();
-    refreshPrompt();
-    Analytics.track("assistant_picked", {assistant: getAssist()});
-  };
-});
-["st-goals", "st-commit", "st-works"].forEach(function(id){
+    ["st-goals", "st-commit", "st-works"].forEach(function(id){
   $(id).addEventListener("input", function(){ readStanding(); refreshPrompt(); });
 });
-
-/* ---- paste-back: apply the AI's update block ---- */
-function parseUpdateBlock(raw){
-  var txt = String(raw || "").replace(/```/g, "");
-  var out = {goals: null, commit: null, works: null, trends: []};
-  function clean(v){ v = (v || "").trim(); return /^\((not set|none\b)/i.test(v) ? "" : v; }
-  var m;
-  m = txt.match(/long-term goals:\s*([^\n]+)/i); if (m) out.goals = clean(m[1]);
-  m = txt.match(/recurring commitments:\s*([^\n]+)/i); if (m) out.commit = clean(m[1]);
-  m = txt.match(/what has worked before:\s*([^\n]+)/i); if (m) out.works = clean(m[1]);
-  var seen = {};
-  txt.split("\n").forEach(function(ln){
-    var v = null, t = ln.match(/^\s*-?\s*trend:\s*(.+?)\s*$/i);
-    if (t) v = t[1];
-    else if (/protected/i.test(ln) && /move\s+(kept|missed)/i.test(ln)) v = ln.replace(/^\s*-?\s*/, "").trim();
-    if (v && !seen[v]){ seen[v] = 1; out.trends.push(v); }
-  });
-  return out;
-}
-$("btn-paste").onclick = function(){
-  var p = parseUpdateBlock($("paste-block").value);
-  var bits = [];
-  if (p.goals !== null){ $("st-goals").value = p.goals; bits.push("goals"); }
-  if (p.commit !== null){ $("st-commit").value = p.commit; bits.push("commitments"); }
-  if (p.works !== null){ $("st-works").value = p.works; bits.push("what works"); }
-  var cur = getTrends(), added = 0;
-  p.trends.forEach(function(v){
-    if (cur.indexOf(v) === -1){ pushTrend(v); cur = getTrends(); added++; }
-  });
-  if (bits.length || added){
-    readStanding(); refreshPrompt(); $("paste-block").value = "";
-    if (added) bits.push(added + " trend line" + (added > 1 ? "s" : ""));
-    $("paste-status").textContent = "Applied: " + bits.join(", ") + ". Your next packet carries it.";
-    Analytics.track("update_block_applied", {fields: bits.length, trends: added});
-  } else {
-    $("paste-status").textContent = "I couldn't find the expected lines. Paste the whole block your AI gave you.";
-  }
-};
 
 function icsEsc(s){
   return String(s).replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, " ");
@@ -922,8 +850,7 @@ $("btn-again").onclick = function(){ clearState(); $("btn-start").click(); };
 
 /* ---- init: returning visitor goes straight to their move ---- */
 (function init(){
-  renderAssist();
-  prefillStanding();
+    prefillStanding();
   if (!checkReturn()) { show("s-hero"); }
 })();
 </script>
