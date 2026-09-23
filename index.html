@@ -649,6 +649,7 @@ $("q-opts").addEventListener("click", function(){
 
 $("btn-to-move").onclick = function(){ state.move = ""; renderMoves(); show("s-move"); };
 $("m-back").onclick = function(){ show("s-reveal"); };
+$("r-back").onclick = function(){ state.finished=false; state.qi=4; renderQ(); show("s-quiz"); };
 $("move-custom").addEventListener("input", function(e){
   var v = e.target.value;
   if (!v.trim()) return;
@@ -669,6 +670,7 @@ $("btn-to-day").onclick = function(){
   show("s-day");
 };
 $("d-back").onclick = function(){ renderMoves(); show("s-move"); };
+$("p-back").onclick = function(){ renderDays(); show("s-day"); };
 $("btn-to-prompt").onclick = function(){
   renderAssist();
   prefillStanding();
