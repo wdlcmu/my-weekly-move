@@ -51,6 +51,7 @@ h1{font-size:clamp(30px,8vw,44px);line-height:1.1;letter-spacing:-.03em;font-wei
 .fine{text-align:center;font-size:12.5px;color:var(--dim);margin-top:12px;}
 .kicker{font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
 .q-progress{font-size:12.5px;color:var(--dim);font-weight:700;margin:26px 0 6px;}
+.q-purpose{font-size:13px;color:var(--dim);margin-bottom:10px;}
 .q-title{font-size:26px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px;}
 .q-hint{font-size:14px;color:var(--muted);margin-bottom:18px;}
 .opt{
@@ -76,6 +77,12 @@ h1{font-size:clamp(30px,8vw,44px);line-height:1.1;letter-spacing:-.03em;font-wei
 }
 .why-line{font-size:13.5px;color:var(--muted);line-height:1.6;background:rgba(60,50,20,.05);border-radius:10px;padding:12px 14px;margin-bottom:8px;}
 .why-line b{color:var(--ink);}
+.why-send{background:rgba(60,50,20,.05);border-radius:12px;padding:14px 16px;margin-bottom:16px;}
+.why-send-title{font-size:12.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.why-send ul{margin:0;padding-left:18px;}
+.why-send li{font-size:13.5px;color:var(--muted);line-height:1.55;margin-bottom:6px;}
+.why-send li:last-child{margin-bottom:0;}
+.why-send li b{color:var(--ink);}
 .steps{margin:14px 0 4px;padding-left:20px;font-size:14.5px;color:var(--muted);line-height:1.7;}
 .steps b{color:var(--ink);}
 .day-pills{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px;}
@@ -129,6 +136,8 @@ h1{font-size:clamp(30px,8vw,44px);line-height:1.1;letter-spacing:-.03em;font-wei
 .standing label{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin:8px 0 4px;letter-spacing:.04em;text-transform:uppercase;}
 .standing input{width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:11px 12px;font-size:14px;color:var(--ink);font-family:inherit;margin-bottom:2px;}
 .standing input:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
+.standing textarea{width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:11px 12px;font-size:14px;color:var(--ink);font-family:inherit;min-height:96px;resize:vertical;}
+.standing textarea:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
 footer{margin-top:44px;border-top:1px solid var(--line);padding-top:20px;font-size:12.5px;color:var(--dim);line-height:1.7;}
 footer b{color:var(--muted);}
 a{color:var(--gold);}
@@ -156,6 +165,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
   <!-- QUIZ -->
   <section class="screen" id="s-quiz">
     <p class="q-progress" id="q-progress">Question 1 of 5</p>
+    <p class="q-purpose">Five honest ratings. Your lowest area becomes the one to protect.</p>
     <h2 class="q-title" id="q-title">Body</h2>
     <p class="q-hint" id="q-hint">Where is your body right now? Answer honestly. No one sees this but you.</p>
     <div id="q-opts"></div>
@@ -203,6 +213,15 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
       <button class="a-pill" data-a="Claude">Claude</button>
       <button class="a-pill" data-a="Gemini">Gemini</button>
     </div>
+    <div class="why-send">
+      <p class="why-send-title">Why send this?</p>
+      <ul>
+        <li><b>It gives your AI a job.</b> Accountability partner, not advice machine. One question at a time, no lectures.</li>
+        <li><b>It carries your week.</b> Your ratings, your move, and your check-in day in a single paste.</li>
+        <li><b>It sets the check-in contract.</b> On your day it asks one question: did you make your move?</li>
+        <li><b>It prepares next week.</b> Your AI hands back an update block you paste in next time, so the loop compounds.</li>
+      </ul>
+    </div>
     <div class="prompt-card" id="prompt-text"></div>
     <button class="cta" id="btn-copy">Copy my check-in prompt</button>
     <p class="fine" id="copy-status" style="min-height:18px"></p>
@@ -215,10 +234,14 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
       <input id="st-commit" maxlength="300" placeholder="Example: kids' bedtime is 8, team standup Mondays"/>
       <label for="st-works">What has worked before</label>
       <input id="st-works" maxlength="300" placeholder="Example: morning workouts stick, evening ones don't"/>
+      <label for="paste-block">Paste your AI's update block</label>
+      <p class="q-hint" style="margin:4px 0 6px;">Your AI hands you an update block after each check-in. Paste it here, code fence and all, and it fills in the boxes above plus your trend log.</p>
+      <textarea id="paste-block" placeholder="Paste the block your AI gave you"></textarea>
+      <button class="cta secondary" id="btn-paste" style="margin-top:10px">Apply update block</button>
+      <p class="fine" id="paste-status" style="min-height:18px"></p>
     </details>
     <button class="cta secondary" id="btn-ics" style="margin-top:12px">Add a calendar reminder (backup)</button>
     <p class="fine" id="ics-status" style="min-height:18px"></p>
-    <div class="why-line"><b>Why this works.</b> Sending the prompt is the mechanism. The outcome is the specific plan your AI helps you make, and the honest answer you give on your check-in day.</div>
     <ol class="steps">
       <li><b>Copy</b> the prompt above.</li>
       <li><b>Paste</b> it into the AI you already use.</li>
@@ -544,7 +567,15 @@ function buildPrompt(){
     "\nMEMORY UPDATE CONTRACT (run at the end of each check-in)\n" +
     "1. REPLACE \"the one to protect\" and \"one move\" with this week's values.\n" +
     "2. Add one trend line: \"" + fmtDate(today) + ": protected " + state.focus + ", move kept/missed.\" Keep at most 8 lines; drop the oldest.\n" +
-    "3. Reply with (a) one short observation about any pattern you see, and (b) the updated STANDING + TREND block in a code fence so I can paste it back into my check-in site next week.";
+    "3. Reply with (a) one short observation about any pattern you see, and (b) the updated block in a code fence, in EXACTLY this format " +
+    "(one - Trend: line per past week, newest last, max 8):\n" +
+    "```\n" +
+    "- Long-term goals: ...\n" +
+    "- Recurring commitments: ...\n" +
+    "- What has worked before: ...\n" +
+    "- Trend: " + fmtDate(today) + ": protected " + state.focus + ", move kept/missed.\n" +
+    "```\n" +
+    "Paste the block into the site's update box and it applies automatically.";
 }
 
 function saveState(){
@@ -696,6 +727,44 @@ document.querySelectorAll("#assist-pills .a-pill").forEach(function(p){
 ["st-goals", "st-commit", "st-works"].forEach(function(id){
   $(id).addEventListener("input", function(){ readStanding(); refreshPrompt(); });
 });
+
+/* ---- paste-back: apply the AI's update block ---- */
+function parseUpdateBlock(raw){
+  var txt = String(raw || "").replace(/```/g, "");
+  var out = {goals: null, commit: null, works: null, trends: []};
+  function clean(v){ v = (v || "").trim(); return /^\((not set|none\b)/i.test(v) ? "" : v; }
+  var m;
+  m = txt.match(/long-term goals:\s*([^\n]+)/i); if (m) out.goals = clean(m[1]);
+  m = txt.match(/recurring commitments:\s*([^\n]+)/i); if (m) out.commit = clean(m[1]);
+  m = txt.match(/what has worked before:\s*([^\n]+)/i); if (m) out.works = clean(m[1]);
+  var seen = {};
+  txt.split("\n").forEach(function(ln){
+    var v = null, t = ln.match(/^\s*-?\s*trend:\s*(.+?)\s*$/i);
+    if (t) v = t[1];
+    else if (/protected/i.test(ln) && /move\s+(kept|missed)/i.test(ln)) v = ln.replace(/^\s*-?\s*/, "").trim();
+    if (v && !seen[v]){ seen[v] = 1; out.trends.push(v); }
+  });
+  return out;
+}
+$("btn-paste").onclick = function(){
+  var p = parseUpdateBlock($("paste-block").value);
+  var bits = [];
+  if (p.goals !== null){ $("st-goals").value = p.goals; bits.push("goals"); }
+  if (p.commit !== null){ $("st-commit").value = p.commit; bits.push("commitments"); }
+  if (p.works !== null){ $("st-works").value = p.works; bits.push("what works"); }
+  var cur = getTrends(), added = 0;
+  p.trends.forEach(function(v){
+    if (cur.indexOf(v) === -1){ pushTrend(v); cur = getTrends(); added++; }
+  });
+  if (bits.length || added){
+    readStanding(); refreshPrompt(); $("paste-block").value = "";
+    if (added) bits.push(added + " trend line" + (added > 1 ? "s" : ""));
+    $("paste-status").textContent = "Applied: " + bits.join(", ") + ". Your next packet carries it.";
+    Analytics.track("update_block_applied", {fields: bits.length, trends: added});
+  } else {
+    $("paste-status").textContent = "I couldn't find the expected lines. Paste the whole block your AI gave you.";
+  }
+};
 
 function icsEsc(s){
   return String(s).replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, " ");
