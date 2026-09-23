@@ -95,6 +95,17 @@ h1{font-size:clamp(30px,8vw,44px);line-height:1.1;letter-spacing:-.03em;font-wei
 .reminder{
   background:var(--card);border:1.5px solid var(--gold-border);border-radius:var(--r);padding:20px;margin-top:26px;
 }
+.pausch-line{font-size:13px;color:var(--dim);font-style:italic;margin-top:14px;line-height:1.6;}
+.share-card{
+  background:var(--card);border:2px solid var(--gold);border-radius:var(--r);
+  padding:22px 18px;margin-top:26px;text-align:center;
+}
+.share-area{font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.share-focus{font-size:30px;font-weight:800;letter-spacing:-.02em;color:var(--ink);line-height:1.15;margin-bottom:8px;}
+.share-move{font-size:15px;color:var(--muted);line-height:1.55;margin-bottom:10px;}
+.share-url{font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);}
+.closing-line{font-size:17px;font-weight:800;text-align:center;margin:26px 0 4px;letter-spacing:-.01em;}
+.closing-sub{text-align:center;font-size:13.5px;color:var(--muted);margin-bottom:4px;}
 .reminder .move-text{font-size:18px;font-weight:700;line-height:1.45;margin:8px 0;}
 .two-btns{display:flex;gap:10px;margin-top:14px;}
 .two-btns .cta{margin-top:0;}
@@ -145,6 +156,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
     <p class="kicker" style="margin-top:26px">The one to protect</p>
     <div class="focus-name" id="r-area">Relationships</div>
     <p class="body-copy">Of the five areas, this is the one you marked lowest. <b>Small moves here matter most.</b> The mirror only points. It never judges.</p>
+    <p class="pausch-line">Inspired by Randy Pausch&rsquo;s question: are you spending your time on the right things?</p>
     <button class="cta" id="btn-to-move">Choose my one move</button>
   </section>
 
@@ -183,6 +195,19 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
       <li><b>Paste</b> it into the AI you already use.</li>
       <li><b>Come back <span id="done-day">Friday</span></b> and tell me: did you make your move?</li>
     </ol>
+    <p class="closing-line">Done. See you <span id="done-day2">Friday</span>.</p>
+    <p class="closing-sub">One area. One move. One honest answer.</p>
+    <div class="share-card">
+      <p class="share-area">This week I&rsquo;m protecting</p>
+      <p class="share-focus" id="share-focus">Body</p>
+      <p class="share-move" id="share-move">&ldquo;Take a 10-minute walk after dinner twice this week&rdquo;</p>
+      <p class="share-url">myweeklymove.com</p>
+    </div>
+    <div class="two-btns">
+      <button class="cta" id="btn-share">Share my move</button>
+      <button class="cta secondary" id="btn-copy-share">Copy text</button>
+    </div>
+    <p class="fine" id="share-status" style="min-height:18px"></p>
   </section>
 
   <!-- RETURNING -->
@@ -340,6 +365,8 @@ function lowestArea(){
 }
 
 function finishQuiz(){
+  if (state.finished) return;
+  state.finished = true;
   var area = lowestArea();
   state.focus = area.key;
   $("r-area").textContent = area.key;
@@ -494,7 +521,11 @@ $("d-back").onclick = function(){ renderMoves(); show("s-move"); };
 $("btn-to-prompt").onclick = function(){
   $("prompt-text").textContent = buildPrompt();
   $("done-day").textContent = dayName(state.checkDay);
+  $("done-day2").textContent = dayName(state.checkDay);
+  $("share-focus").textContent = state.focus;
+  $("share-move").textContent = "\u201C" + state.move + "\u201D";
   $("copy-status").textContent = "";
+  $("share-status").textContent = "";
   saveState();
   Analytics.track("prompt_built", {focus: state.focus});
   show("s-prompt");
@@ -515,6 +546,40 @@ $("btn-copy").onclick = function(){
     ta.value = text; document.body.appendChild(ta); ta.select();
     try { document.execCommand("copy") ? ok() : fail(); } catch(e){ fail(); }
     document.body.removeChild(ta);
+  }
+};
+
+/* share */
+function buildShareText(){
+  return "This week I'm protecting " + state.focus + ": " + state.move +
+    ". What's your move? myweeklymove.com";
+}
+$("btn-copy-share").onclick = function(){
+  var text = buildShareText();
+  function ok(){
+    $("share-status").textContent = "Copied. Post it anywhere.";
+    Analytics.track("move_shared", {focus: state.focus, via: "copy"});
+  }
+  function fail(){
+    $("share-status").textContent = "Copy did not work. Long-press the card text to copy it by hand.";
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(ok, fail);
+  } else {
+    var ta = document.createElement("textarea");
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy") ? ok() : fail(); } catch(e){ fail(); }
+    document.body.removeChild(ta);
+  }
+};
+$("btn-share").onclick = function(){
+  var text = buildShareText();
+  if (navigator.share) {
+    navigator.share({title: "My Weekly Move", text: text}).then(function(){
+      Analytics.track("move_shared", {focus: state.focus, via: "native"});
+    }, function(){});
+  } else {
+    $("btn-copy-share").click();
   }
 };
 
