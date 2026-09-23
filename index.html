@@ -35,7 +35,7 @@ header.brand{padding:22px 0 8px;display:flex;align-items:center;gap:10px;}
 .screen{display:none;animation:fadeUp .35s ease;}
 .screen.on{display:block;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
-h1{font-size:clamp(30px,8vw,44px);line-height:1.1;letter-spacing:-.03em;font-weight:800;margin:26px 0 14px;}
+h1{font-size:clamp(30px,8vw,44px);line-height:1.1;letter-spacing:-.03em;font-weight:800;margin:26px 0 14px;}.hero-img{display:block;width:100%;max-width:560px;height:auto;border-radius:14px;margin:26px auto 18px;}
 .sub{font-size:16px;color:var(--muted);line-height:1.6;margin-bottom:8px;}
 .sub b{color:var(--ink);}
 .mechanic{
@@ -141,7 +141,7 @@ h1{font-size:clamp(30px,8vw,44px);line-height:1.1;letter-spacing:-.03em;font-wei
 .standing label{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin:8px 0 4px;letter-spacing:.04em;text-transform:uppercase;}
 .standing input{width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:11px 12px;font-size:14px;color:var(--ink);font-family:inherit;margin-bottom:2px;}
 .standing input:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
-.standing textarea{width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:11px 12px;font-size:14px;color:var(--ink);font-family:inherit;min-height:96px;resize:vertical;}
+.standing textarea{width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:10px    ;padding:11px 12px;font-size:14px;color:var(--ink);font-family:inherit;min-height:96px;resize:vertical;}
 .standing textarea:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
 footer{margin-top:44px;border-top:1px solid var(--line);padding-top:20px;font-size:12.5px;color:var(--dim);line-height:1.7;}
 footer b{color:var(--muted);}
@@ -159,7 +159,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
   </header>
 
   <!-- HERO -->
-  <section class="screen on" id="s-hero">
+  <section class="screen on" id="s-hero"><img class="hero-img" src="images/hero.png" alt=""/>
+    
     <h1>Your AI can answer anything. It can&rsquo;t tell you what matters this week.</h1>
     <p class="sub">My Weekly Move is a <b>two-minute mirror</b>. Five honest questions, the one area of your life most worth protecting, and <b>one small move</b> for the week.</p>
     <div class="mechanic">You leave with a prompt. Paste it into your AI, and it asks you on your check-in day: did you make your move?</div>
