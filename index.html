@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>My Weekly Move, a two-minute mirror for your week</title>
+<meta name="description" content="Five honest questions. The one area of your life most worth protecting. One small move for the week. Paste the check-in prompt into the AI you already use."/>
+<meta property="og:title" content="My Weekly Move"/>
+<meta property="og:description" content="Your AI can answer anything. It can't tell you what matters this week. Two minutes, five honest questions, one small move."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://myweeklymove.com/"/>
+<link rel="canonical" href="https://myweeklymove.com/"/>
+<meta name="theme-color" content="#faf6ee"/>
+<style>
+:root{
+  --bg:#faf6ee; --card:#fffdf8; --ink:#2b2f36; --muted:#5c6675; --dim:#8a93a1;
+  --gold:#8f5f06; --gold-soft:#f6ead0; --gold-border:rgba(143,95,6,.35);
+  --line:rgba(60,50,20,.14); --r:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;background:var(--bg);}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  background:var(--bg); color:var(--ink); min-height:100vh; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:560px;margin:0 auto;padding:0 20px 90px;}
+header.brand{padding:22px 0 8px;display:flex;align-items:center;gap:10px;}
+.brand-mark{
+  width:34px;height:34px;border-radius:10px;background:var(--gold);color:#fffdf8;
+  display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;flex-shrink:0;
+}
+.brand-name{font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);}
+.screen{display:none;animation:fadeUp .35s ease;}
+.screen.on{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+h1{font-size:clamp(30px,8vw,44px);line-height:1.1;letter-spacing:-.03em;font-weight:800;margin:26px 0 14px;}
+.sub{font-size:16px;color:var(--muted);line-height:1.6;margin-bottom:8px;}
+.sub b{color:var(--ink);}
+.mechanic{
+  margin:18px 0 4px;font-size:14px;line-height:1.6;color:var(--ink);
+  background:var(--gold-soft);border:1px solid var(--gold-border);
+  border-radius:12px;padding:13px 15px;
+}
+.cta{
+  display:block;width:100%;margin-top:22px;background:var(--gold);color:#fffdf8;border:none;
+  border-radius:14px;padding:17px;font-size:16.5px;font-weight:800;cursor:pointer;letter-spacing:-.01em;
+}
+.cta:active{transform:scale(.985);}
+.cta.secondary{background:transparent;color:var(--gold);border:1.5px solid var(--gold-border);}
+.fine{text-align:center;font-size:12.5px;color:var(--dim);margin-top:12px;}
+.kicker{font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.q-progress{font-size:12.5px;color:var(--dim);font-weight:700;margin:26px 0 6px;}
+.q-title{font-size:26px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px;}
+.q-hint{font-size:14px;color:var(--muted);margin-bottom:18px;}
+.opt{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  background:var(--card);border:1.5px solid var(--line);border-radius:14px;
+  padding:16px;font-size:16px;font-weight:700;color:var(--ink);cursor:pointer;margin-bottom:10px;min-height:60px;
+}
+.opt small{display:block;font-weight:400;font-size:13px;color:var(--muted);margin-top:2px;}
+.opt .tick{
+  width:24px;height:24px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:transparent;
+}
+.opt.sel{border-color:var(--gold);background:#fff9ec;}
+.opt.sel .tick{border-color:var(--gold);background:var(--gold);color:#fffdf8;}
+.backlink{background:none;border:none;color:var(--dim);font-size:13.5px;font-weight:700;cursor:pointer;margin-top:6px;padding:10px 0;}
+.focus-name{font-size:clamp(38px,11vw,58px);font-weight:800;letter-spacing:-.03em;color:var(--gold);line-height:1.05;margin:4px 0 12px;}
+.body-copy{font-size:15px;color:var(--muted);line-height:1.6;margin-bottom:8px;}
+.body-copy b{color:var(--ink);}
+.prompt-card{
+  background:var(--card);border:1.5px solid var(--gold-border);border-left:4px solid var(--gold);
+  border-radius:12px;padding:16px;font-size:14.5px;line-height:1.65;color:var(--ink);
+  white-space:pre-wrap;margin:16px 0;
+}
+.why-line{font-size:13.5px;color:var(--muted);line-height:1.6;background:rgba(60,50,20,.05);border-radius:10px;padding:12px 14px;margin-bottom:8px;}
+.why-line b{color:var(--ink);}
+.steps{margin:14px 0 4px;padding-left:20px;font-size:14.5px;color:var(--muted);line-height:1.7;}
+.steps b{color:var(--ink);}
+.day-pills{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px;}
+.day-pill{
+  flex:1 1 0;min-width:64px;padding:12px 6px;border-radius:12px;border:1.5px solid var(--line);
+  background:var(--card);font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;text-align:center;
+}
+.day-pill small{display:block;font-weight:400;font-size:11px;margin-top:2px;}
+.day-pill.sel{border-color:var(--gold);color:var(--gold);background:#fff9ec;}
+.day-pill.sel::before{content:"\2713  ";}
+.move-input{
+  width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:12px;
+  padding:14px;font-size:15px;color:var(--ink);font-family:inherit;margin-top:4px;min-height:52px;
+}
+.move-input:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
+.or{font-size:12.5px;color:var(--dim);text-align:center;margin:14px 0 6px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+.reminder{
+  background:var(--card);border:1.5px solid var(--gold-border);border-radius:var(--r);padding:20px;margin-top:26px;
+}
+.reminder .move-text{font-size:18px;font-weight:700;line-height:1.45;margin:8px 0;}
+.two-btns{display:flex;gap:10px;margin-top:14px;}
+.two-btns .cta{margin-top:0;}
+.faq{margin-top:54px;border-top:1px solid var(--line);padding-top:26px;}
+.faq h2{font-size:20px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px;}
+.faq details{border-bottom:1px solid var(--line);padding:14px 2px;}
+.faq summary{font-size:15px;font-weight:700;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:10px;}
+.faq summary::-webkit-details-marker{display:none;}
+.faq summary::after{content:"+";color:var(--gold);font-weight:900;flex-shrink:0;}
+.faq details[open] summary::after{content:"\2212";}
+.faq details p{font-size:14px;color:var(--muted);line-height:1.65;margin-top:10px;}
+.faq details p b{color:var(--ink);}
+footer{margin-top:44px;border-top:1px solid var(--line);padding-top:20px;font-size:12.5px;color:var(--dim);line-height:1.7;}
+footer b{color:var(--muted);}
+a{color:var(--gold);}
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:6px;}
+@media (prefers-reduced-motion: reduce){.screen{animation:none;}html{scroll-behavior:auto;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="brand">
+    <div class="brand-mark">M</div>
+    <div class="brand-name">My Weekly Move</div>
+  </header>
+
+  <!-- HERO -->
+  <section class="screen on" id="s-hero">
+    <h1>Your AI can answer anything. It can&rsquo;t tell you what matters this week.</h1>
+    <p class="sub">My Weekly Move is a <b>two-minute mirror</b>. Five honest questions, the one area of your life most worth protecting, and <b>one small move</b> for the week.</p>
+    <div class="mechanic">You leave with a check-in prompt in your words. Paste it into the AI you already use, and it asks you later this week: did you make your move?</div>
+    <button class="cta" id="btn-start">Start the 2-minute check-in</button>
+    <p class="fine">No signup. No app. Nothing stored on our servers.</p>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="screen" id="s-quiz">
+    <p class="q-progress" id="q-progress">Question 1 of 5</p>
+    <h2 class="q-title" id="q-title">Body</h2>
+    <p class="q-hint" id="q-hint">Where is your body right now? Answer honestly. No one sees this but you.</p>
+    <div id="q-opts"></div>
+    <button class="backlink" id="q-back">&larr; Back</button>
+  </section>
+
+  <!-- REVEAL -->
+  <section class="screen" id="s-reveal">
+    <p class="kicker" style="margin-top:26px">The one to protect</p>
+    <div class="focus-name" id="r-area">Relationships</div>
+    <p class="body-copy">Of the five areas, this is the one you marked lowest. <b>Small moves here matter most.</b> The mirror only points. It never judges.</p>
+    <button class="cta" id="btn-to-move">Choose my one move</button>
+  </section>
+
+  <!-- MOVE -->
+  <section class="screen" id="s-move">
+    <p class="kicker" style="margin-top:26px">Your one move for the week</p>
+    <h2 class="q-title">Small enough to do.<br/>Big enough to matter.</h2>
+    <p class="q-hint">Pick one, or write your own in your words. Your own words make the stronger promise.</p>
+    <div id="move-opts"></div>
+    <p class="or">or make it yours</p>
+    <input class="move-input" id="move-custom" maxlength="140" placeholder="Write your move in your own words"/>
+    <button class="cta" id="btn-to-day" style="margin-top:18px">Set my check-in day</button>
+    <button class="backlink" id="m-back">&larr; Back</button>
+  </section>
+
+  <!-- DAY -->
+  <section class="screen" id="s-day">
+    <p class="kicker" style="margin-top:26px">The check-in</p>
+    <h2 class="q-title">When should your AI ask you about it?</h2>
+    <p class="q-hint">Pick a day. Your prompt will tell your AI to ask you then, plainly: did you make your move?</p>
+    <div class="day-pills" id="day-pills"></div>
+    <button class="cta" id="btn-to-prompt" style="margin-top:18px">Build my check-in prompt</button>
+    <button class="backlink" id="d-back">&larr; Back</button>
+  </section>
+
+  <!-- PROMPT -->
+  <section class="screen" id="s-prompt">
+    <p class="kicker" style="margin-top:26px">Your check-in prompt</p>
+    <h2 class="q-title">Take this to your AI.</h2>
+    <div class="prompt-card" id="prompt-text"></div>
+    <button class="cta" id="btn-copy">Copy my check-in prompt</button>
+    <p class="fine" id="copy-status" style="min-height:18px"></p>
+    <div class="why-line"><b>Why this works.</b> It gives your AI three things: what matters (your area), what to watch (your move), and when to ask (your day). That is the whole trick, and now you know it.</div>
+    <ol class="steps">
+      <li><b>Copy</b> the prompt above.</li>
+      <li><b>Paste</b> it into the AI you already use.</li>
+      <li><b>Come back <span id="done-day">Friday</span></b> and tell me: did you make your move?</li>
+    </ol>
+  </section>
+
+  <!-- RETURNING -->
+  <section class="screen" id="s-return">
+    <div class="reminder">
+      <p class="kicker">Welcome back</p>
+      <p class="body-copy">Your move this week:</p>
+      <p class="move-text" id="ret-move"></p>
+      <p class="body-copy" id="ret-day-line"></p>
+      <div class="two-btns" id="ret-answer" style="display:none">
+        <button class="cta" id="btn-yes">I made it</button>
+        <button class="cta secondary" id="btn-notyet">Not yet</button>
+      </div>
+      <p class="body-copy" id="ret-note" style="margin-top:12px"></p>
+      <button class="backlink" id="ret-fresh">Start a fresh check-in &rarr;</button>
+    </div>
+  </section>
+
+  <!-- DONE -->
+  <section class="screen" id="s-done">
+    <p class="kicker" style="margin-top:26px" id="done-kicker">Recorded</p>
+    <h2 class="q-title" id="done-title">Good. That is honest.</h2>
+    <p class="body-copy" id="done-body"></p>
+    <button class="cta" id="btn-again">Start a fresh week</button>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <h2>Fair questions</h2>
+    <details>
+      <summary>Why go here instead of asking my AI directly?</summary>
+      <p>Your AI will happily chat about your week for twenty minutes and you will leave with nothing. <b>This site imposes structure:</b> five areas, one answer, one move, one prompt. It is the difference between journaling and being asked a direct question. Your AI also only knows what you have told it, it agrees with you too easily, and it may not reliably follow up unless you give it a time and a clear instruction.</p>
+    </details>
+    <details>
+      <summary>Is the check-in tested?</summary>
+      <p>Honestly: the five-question structure is common sense, not science. What the research does support is the mechanic underneath it: <b>weekly check-ins help people follow through.</b> This site is new. We will publish what we learn, starting with one number: how many people say they made their move.</p>
+    </details>
+    <details>
+      <summary>Do I need an account? What do you store?</summary>
+      <p><b>No account, no email, no tracking of who you are.</b> Your answers stay in your own browser. We count anonymous events (started, finished, copied the prompt, came back) so we can tell if the thing works. That is it.</p>
+    </details>
+    <details>
+      <summary>Is this medical or mental health advice?</summary>
+      <p><b>No.</b> This is a mirror, not a diagnosis and not treatment. If you are struggling, talk to someone you trust or a professional.</p>
+    </details>
+    <details>
+      <summary>Why weekly?</summary>
+      <p>A week is short enough to act and long enough to matter. Resolutions die by February. <b>A week is a bet you can win.</b></p>
+    </details>
+    <details>
+      <summary>Who made this?</summary>
+      <p>Built by Billy Litner. Inspired by Randy Pausch&rsquo;s question: <b>are you spending your time on the right things?</b></p>
+    </details>
+  </section>
+
+  <footer>
+    <b>My Weekly Move.</b> A two-minute mirror for your week.<br/>
+    Inspired by Randy Pausch&rsquo;s question: are you spending your time on the right things?<br/>
+    Anonymous by design. Your answers never leave your browser.
+  </footer>
+
+</div>
+<script>
+/* Analytics shim. Swap for PostHog when the project is created. */
+var Analytics = {
+  track: function(name, props){
+    (window.__mwmq = window.__mwmq || []).push({name: name, props: props || {}, t: Date.now()});
+    if (window.console && console.debug) console.debug("[mwm]", name, props || {});
+  }
+};
+
+var AREAS = [
+  { key: "Body", hint: "Sleep, energy, movement, health. Where is your body right now?",
+    moves: [
+      "Take a 10-minute walk after dinner twice this week",
+      "Put a vegetable on the plate at lunch three days",
+      "Get to bed by 11 two nights this week"
+    ] },
+  { key: "Mind", hint: "Calm, focus, mood. Where is your head right now?",
+    moves: [
+      "Write three lines in a notebook before bed twice",
+      "Take one 5-minute breathing break on workdays",
+      "Name one good thing from the day, out loud, twice"
+    ] },
+  { key: "Relationships", hint: "Family, friends, partner. Where are your people right now?",
+    moves: [
+      "Put one real catch-up on the calendar this week",
+      "Text one friend you keep meaning to call",
+      "Eat one meal with someone, phones away"
+    ] },
+  { key: "Work", hint: "Direction, load, meaning. Where is your work right now?",
+    moves: [
+      "Write down the one thing that matters most each morning, three days",
+      "Block 30 unscheduled minutes on Thursday",
+      "Finish one small task you have been avoiding"
+    ] },
+  { key: "Money", hint: "Spending, saving, security. Where is your money right now?",
+    moves: [
+      "Look at your spending for 10 minutes on Saturday",
+      "Move $50 to savings",
+      "Cancel one subscription you do not use"
+    ] }
+];
+
+var OPTIONS = [
+  { label: "Struggling", sub: "This is hard right now", value: 2 },
+  { label: "Getting by", sub: "Holding on, barely", value: 5 },
+  { label: "Solid", sub: "Steady, no complaints", value: 7 },
+  { label: "Thriving", sub: "This part is alive", value: 9 }
+];
+
+var state = { qi: 0, ratings: {}, move: "", checkDay: null };
+var LS_KEY = "mwm_state_v1";
+
+function $(id){ return document.getElementById(id); }
+function show(id){
+  document.querySelectorAll(".screen").forEach(function(s){ s.classList.remove("on"); });
+  $(id).classList.add("on");
+  window.scrollTo({top: 0, behavior: "smooth"});
+}
+function fmtDate(d){
+  return d.toLocaleDateString("en-US", {weekday: "short", month: "short", day: "numeric", year: "numeric"});
+}
+function dayName(d){
+  return d.toLocaleDateString("en-US", {weekday: "long"});
+}
+
+/* ---- quiz ---- */
+function renderQ(){
+  var area = AREAS[state.qi];
+  $("q-progress").textContent = "Question " + (state.qi + 1) + " of 5";
+  $("q-title").textContent = area.key;
+  $("q-hint").textContent = area.hint + " Answer honestly. No one sees this but you.";
+  var box = $("q-opts");
+  box.innerHTML = "";
+  OPTIONS.forEach(function(o){
+    var b = document.createElement("button");
+    b.className = "opt" + (state.ratings[area.key] === o.value ? " sel" : "");
+    b.innerHTML = '<span class="tick">\u2713</span><span>' + o.label +
+      "<small>" + o.sub + "</small></span>";
+    b.onclick = function(){ state.ratings[area.key] = o.value; renderQ(); };
+    box.appendChild(b);
+  });
+  $("q-back").style.visibility = state.qi === 0 ? "hidden" : "visible";
+  var done = AREAS.every(function(a){ return state.ratings[a.key] != null; });
+  if (done) { setTimeout(finishQuiz, 350); }
+}
+
+function lowestArea(){
+  var low = AREAS[0];
+  AREAS.forEach(function(a){
+    if (state.ratings[a.key] < state.ratings[low.key]) low = a;
+  });
+  return low;
+}
+
+function finishQuiz(){
+  var area = lowestArea();
+  state.focus = area.key;
+  $("r-area").textContent = area.key;
+  Analytics.track("checkin_completed", {focus: area.key});
+  show("s-reveal");
+}
+
+/* ---- move ---- */
+function renderMoves(){
+  var area = AREAS.filter(function(a){ return a.key === state.focus; })[0];
+  var box = $("move-opts");
+  box.innerHTML = "";
+  area.moves.forEach(function(m){
+    var b = document.createElement("button");
+    b.className = "opt" + (state.move === m ? " sel" : "");
+    b.innerHTML = '<span class="tick">\u2713</span><span>' + m + "</span>";
+    b.onclick = function(){ state.move = m; $("move-custom").value = ""; renderMoves(); };
+    box.appendChild(b);
+  });
+  if (state.move && area.moves.indexOf(state.move) === -1) {
+    $("move-custom").value = state.move;
+  }
+}
+
+/* ---- day ---- */
+function renderDays(){
+  var box = $("day-pills");
+  box.innerHTML = "";
+  var today = new Date();
+  for (var i = 1; i <= 7; i++) {
+    (function(i){
+      var d = new Date(today.getTime());
+      d.setDate(d.getDate() + i);
+      var b = document.createElement("button");
+      var isSel = state.checkDay && state.checkDay.getTime() === d.setHours(0,0,0,0);
+      b.className = "day-pill" + (isSel ? " sel" : "");
+      var label = d.toLocaleDateString("en-US", {weekday: "short"});
+      var md = d.toLocaleDateString("en-US", {month: "numeric", day: "numeric"});
+      b.innerHTML = label + "<small>" + md + "</small>";
+      b.onclick = function(){
+        var dd = new Date(today.getTime());
+        dd.setDate(dd.getDate() + i);
+        dd.setHours(0,0,0,0);
+        state.checkDay = dd;
+        renderDays();
+      };
+      box.appendChild(b);
+    })(i);
+  }
+}
+
+function defaultDay(){
+  var d = new Date();
+  d.setDate(d.getDate() + 3);
+  d.setHours(0,0,0,0);
+  return d;
+}
+
+/* ---- prompt ---- */
+function buildPrompt(){
+  var today = new Date();
+  return "My Weekly Move check-in, " + fmtDate(today) + "\n" +
+    "The one area I am protecting this week: " + state.focus + "\n" +
+    "My one move: " + state.move + "\n" +
+    "Ask me on " + dayName(state.checkDay) + ", " +
+    state.checkDay.toLocaleDateString("en-US", {month: "short", day: "numeric"}) +
+    " if I made my move. One question, no lecture. " +
+    "If I say not yet, help me make it smaller instead of making me feel bad.";
+}
+
+function saveState(){
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify({
+      focus: state.focus, move: state.move,
+      checkDay: state.checkDay.getTime(), created: Date.now(), answered: false
+    }));
+  } catch(e){}
+}
+function loadState(){
+  try {
+    var raw = localStorage.getItem(LS_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch(e){ return null; }
+}
+function clearState(){
+  try { localStorage.removeItem(LS_KEY); } catch(e){}
+}
+
+/* ---- return visitor ---- */
+function checkReturn(){
+  var s = loadState();
+  if (!s || !s.move) return false;
+  var today = new Date(); today.setHours(0,0,0,0);
+  var cd = new Date(s.checkDay); cd.setHours(0,0,0,0);
+  $("ret-move").textContent = "\u201C" + s.move + "\u201D";
+  if (s.answered) {
+    $("ret-day-line").textContent = "You already answered for this week. Nicely done.";
+    $("ret-note").textContent = "";
+    $("ret-answer").style.display = "none";
+  } else if (today >= cd) {
+    $("ret-day-line").textContent = "Your AI should have asked you by " + dayName(cd) + ". Your turn to answer:";
+    $("ret-answer").style.display = "flex";
+    $("ret-note").textContent = "";
+  } else {
+    $("ret-day-line").textContent = "Protecting: " + s.focus + ". Your AI will ask you on " + dayName(cd) + ".";
+    $("ret-note").textContent = "No need to re-rate. Just keep the move in sight.";
+    $("ret-answer").style.display = "none";
+  }
+  Analytics.track("return_visit", {answered: !!s.answered});
+  show("s-return");
+  return true;
+}
+
+/* ---- wiring ---- */
+$("btn-start").onclick = function(){
+  state = { qi: 0, ratings: {}, move: "", checkDay: null };
+  Analytics.track("checkin_started", {});
+  renderQ();
+  show("s-quiz");
+};
+$("q-back").onclick = function(){
+  if (state.qi > 0) { state.qi--; renderQ(); }
+};
+$("q-opts").addEventListener("click", function(){
+  setTimeout(function(){
+    if (state.qi < AREAS.length - 1 && state.ratings[AREAS[state.qi].key] != null) {
+      var allAnswered = AREAS.slice(0, state.qi + 1).every(function(a){ return state.ratings[a.key] != null; });
+      if (allAnswered) { state.qi++; renderQ(); }
+    }
+  }, 120);
+});
+
+$("btn-to-move").onclick = function(){ state.move = ""; renderMoves(); show("s-move"); };
+$("m-back").onclick = function(){ show("s-reveal"); };
+$("move-custom").addEventListener("input", function(e){
+  var v = e.target.value.trim();
+  if (v) { state.move = v; renderMoves(); }
+});
+$("btn-to-day").onclick = function(){
+  var custom = $("move-custom").value.trim();
+  if (custom) state.move = custom;
+  if (!state.move) {
+    $("move-custom").focus();
+    $("move-custom").style.borderColor = "var(--gold)";
+    return;
+  }
+  if (!state.checkDay) state.checkDay = defaultDay();
+  renderDays();
+  show("s-day");
+};
+$("d-back").onclick = function(){ renderMoves(); show("s-move"); };
+$("btn-to-prompt").onclick = function(){
+  $("prompt-text").textContent = buildPrompt();
+  $("done-day").textContent = dayName(state.checkDay);
+  $("copy-status").textContent = "";
+  saveState();
+  Analytics.track("prompt_built", {focus: state.focus});
+  show("s-prompt");
+};
+$("btn-copy").onclick = function(){
+  var text = buildPrompt();
+  function ok(){
+    $("copy-status").textContent = "Copied. Paste it into your AI.";
+    Analytics.track("prompt_copied", {focus: state.focus});
+  }
+  function fail(){
+    $("copy-status").textContent = "Copy did not work. Long-press the text to copy it by hand.";
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(ok, fail);
+  } else {
+    var ta = document.createElement("textarea");
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy") ? ok() : fail(); } catch(e){ fail(); }
+    document.body.removeChild(ta);
+  }
+};
+
+/* return-visit answers */
+$("btn-yes").onclick = function(){
+  Analytics.track("deposit_confirmed", {result: "yes"});
+  var s = loadState(); if (s) { s.answered = true; try{ localStorage.setItem(LS_KEY, JSON.stringify(s)); }catch(e){} }
+  $("done-kicker").textContent = "Week complete";
+  $("done-title").textContent = "You made your move.";
+  $("done-body").innerHTML = "That is the whole game. <b>One area, one move, one honest answer.</b> Ready for a fresh two minutes?";
+  show("s-done");
+};
+$("btn-notyet").onclick = function(){
+  Analytics.track("deposit_confirmed", {result: "not_yet"});
+  var s = loadState(); if (s) { s.answered = true; try{ localStorage.setItem(LS_KEY, JSON.stringify(s)); }catch(e){} }
+  $("done-kicker").textContent = "Recorded";
+  $("done-title").textContent = "Good. That is honest.";
+  $("done-body").innerHTML = "Not yet is a real answer. <b>Next week, make the move smaller until it is boring.</b> Boring moves get done.";
+  show("s-done");
+};
+$("ret-fresh").onclick = function(){ clearState(); $("btn-start").click(); };
+$("btn-again").onclick = function(){ clearState(); $("btn-start").click(); };
+
+/* ---- init: returning visitor goes straight to their move ---- */
+(function init(){
+  if (!checkReturn()) { show("s-hero"); }
+})();
+</script>
+</body>
+</html>
