@@ -322,13 +322,55 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
 
 </div>
 <script>
-/* Analytics shim. Swap for PostHog when the project is created. */
-var Analytics = {
-  track: function(name, props){
-    (window.__mwmq = window.__mwmq || []).push({name: name, props: props || {}, t: Date.now()});
-    if (window.console && console.debug) console.debug("[mwm]", name, props || {});
+/* Analytics — fleet PostHog loader (fixed 2026-11-26: the old shim queued
+   events locally and sent nothing, so the site recorded zero events).
+   PostHog project 624507, shared fleet key. Anonymous metadata only: event
+   names + enum properties. Autocapture off, session recording off.
+   Internal rule (fleet-wide): ?internal=1 once on a device flags its events
+   internal:true; ?probe= / ?sim= visits are flagged too and filtered out
+   of fleet reporting. */
+var Analytics = (function(){
+  var KEY = "phc_t9dkHXAZR5VEjPFm3K5JDzGKFsNNxKcwSxxcEBEeLbS7", SITE = "myweeklymove";
+  var _int = null;
+  function isInternal(){
+    if (_int !== null) return _int;
+    var flag = false;
+    try {
+      var q = location.search || "";
+      if (/[?&]internal=1(?:&|$)/.test(q)) { try { localStorage.setItem("fleet_internal", "1"); } catch(e){} flag = true; }
+      else if (/[?&]internal=0(?:&|$)/.test(q)) { try { localStorage.removeItem("fleet_internal"); } catch(e){} }
+      else if (/[?&](probe|sim)=/.test(q)) { flag = true; }
+      else { try { flag = localStorage.getItem("fleet_internal") === "1"; } catch(e){} }
+    } catch(e2){}
+    _int = flag;
+    return flag;
   }
-};
+  var Q = [];
+  function track(name, props){
+    props = props || {};
+    props.site = SITE;
+    try { if (isInternal()) props.internal = true; } catch(e){}
+    try {
+      if (window.posthog && posthog.capture) posthog.capture(name, props);
+      else { Q.push([name, props]); if (Q.length > 100) Q.shift(); }
+    } catch(e){}
+    if (window.console && console.debug) console.debug("[mwm]", name, props);
+  }
+  var s = document.createElement("script");
+  s.async = true;
+  s.src = "https://us.i.posthog.com/static/array.js";
+  s.onload = function(){
+    try {
+      if (window.posthog && posthog.init) {
+        posthog.init(KEY, {api_host: "https://us.i.posthog.com", autocapture: false, capture_pageview: true, disable_session_recording: true, persistence: "localStorage"});
+        try { posthog.register({site: SITE, internal: isInternal()}); } catch(e){}
+        while (Q.length) { var e0 = Q.shift(); try { posthog.capture(e0[0], e0[1]); } catch(e){} }
+      }
+    } catch(e){}
+  };
+  document.head.appendChild(s);
+  return { track: track };
+})();
 
 var AREAS = [
   { key: "Body", hint: "Sleep, energy, movement, health. Where is your body right now?",
